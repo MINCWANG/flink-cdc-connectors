@@ -254,10 +254,22 @@ public class DebeziumSourceFunction<T> extends RichSourceFunction<T> implements
 			properties.setProperty(FlinkOffsetBackingStore.OFFSET_STATE_VALUE, restoredOffsetState);
 		}
 		// DO NOT include schema payload in change event
-		properties.setProperty("key.converter.schemas.enable", "false");
-		properties.setProperty("value.converter.schemas.enable", "false");
+		if (properties.getProperty("key.converter.schemas.enable") != null){
+			properties.setProperty("key.converter.schemas.enable", properties.getProperty("key.converter.schemas.enable"));
+		} else {
+			properties.setProperty("key.converter.schemas.enable", "false");
+		}
+		if (properties.getProperty("value.converter.schemas.enable") != null){
+			properties.setProperty("value.converter.schemas.enable", properties.getProperty("value.converter.schemas.enable"));
+		} else {
+			properties.setProperty("value.converter.schemas.enable", "false");
+		}
 		// DO NOT include schema change, e.g. DDL
-		properties.setProperty("include.schema.changes", "false");
+		if (properties.getProperty("include.schema.changes") != null){
+			properties.setProperty("include.schema.changes", properties.getProperty("include.schema.changes"));
+		} else {
+			properties.setProperty("include.schema.changes", "false");
+		}
 		// disable the offset flush totally
 		properties.setProperty("offset.flush.interval.ms", String.valueOf(Long.MAX_VALUE));
 		// disable tombstones
